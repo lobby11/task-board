@@ -1,0 +1,271 @@
+/* =========================
+   1. VARIABLES & RESET
+   ========================= */
+:root {
+    /* Background Hierarchy */
+    --bg-app: #02091b;        /* Level 1: Screen background */
+    --bg-column: #1e293b;     /* Level 2: Column background */
+    --bg-task: #334155;       /* Level 3: Task Card */
+    
+    /* Text & Accents */
+    --text-main: #f1f5f9;
+    --text-muted: #94a3b8;
+    --primary-accent: #092413; /* Indigo */
+    --primary-hover: #020213;
+    --danger: #ef4444;
+
+    /* Sizing */
+    --nav-height: 70px;
+    --radius: 12px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background-color: var(--bg-app);
+    color: var(--text-main);
+    overflow: hidden; 
+}
+
+/* =========================
+   2. NAVIGATION
+   ========================= */
+main {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+nav {
+    height: var(--nav-height);
+    padding: 0 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--bg-app);
+    border-bottom: 1px solid #0e9a79;
+    flex-shrink: 1;
+}
+
+nav h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+nav button {
+    background-color: var(--primary-accent);
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: var(--radius);
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.4);
+    transition: transform 0.1s, background-color 0.2s;
+}
+
+nav button:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
+/* =========================
+   3. BOARD LAYOUT
+   ========================= */
+section {
+    flex-grow: 1;
+    padding: 20px;
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    width: 100%; 
+}
+
+/* =========================
+   4. COLUMNS
+   ========================= */
+section .task-column {
+    background-color: var(--bg-column);
+    flex: 1;
+    min-width: 300px;
+    max-height: 100%;
+    overflow-y: auto; /* Scroll inside column */
+    
+    padding: 15px;
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border: 1px solid #dc1593;
+    
+    scrollbar-width: thin;
+    scrollbar-color: #475569 transparent;
+}
+
+section .task-column.hover-over {
+    border: 2px dashed var(--primary-accent);
+    background-color: rgba(99, 102, 241, 0.1);
+}
+
+section .task-column .heading {
+    position: sticky;
+    top: 0;
+    background-color: var(--bg-column);
+    z-index: 5;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #334155;
+    margin-bottom: 5px;
+    
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+}
+
+/* =========================
+   5. TASKS
+   ========================= */
+section .task-column .task {
+    background-color: var(--bg-task);
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    cursor: grab;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    border: 1px solid transparent;
+    transition: box-shadow 0.2s, transform 0.2s;
+    flex-shrink: 0;
+}
+
+section .task-column .task:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+    border-color: #64748b;
+    transform: translateY(-2px);
+    z-index: 2;
+}
+
+section .task-column .task p {
+    line-height: 1.4;
+    color: #e2e8f0;
+    word-wrap: break-word;
+}
+
+section .task-column .task button {
+    align-self: flex-end;
+    background: transparent;
+    border: 1px solid var(--danger);
+    color: var(--danger);
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: 0.2s;
+}
+
+section .task-column .task button:hover {
+    background-color: var(--danger);
+    color: white;
+}
+
+.task.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+}
+
+/* =========================
+   6. MODAL & FORM FIXES
+   ========================= */
+.modal {
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    top: 0; left: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal .bg {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+}
+
+.modal .center {
+    background-color: var(--bg-column);
+    padding: 30px;
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 10;
+    
+    width: 450px;           /* Slightly wider for better writing space */
+    max-width: 90%;         /* Mobile responsive */
+    max-height: 90vh;       /* Prevents overflow off-screen */
+    overflow-y: auto;       /* Adds scrollbar if content gets huge */
+    
+    border: 1px solid #475569;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+}
+
+/* Target Inputs AND Textareas */
+.modal .center input, 
+.modal .center select,
+.modal .center textarea {
+    background-color: var(--bg-app); /* Darkest BG */
+    border: 1px solid #475569;
+    color: white;                    /* White Text */
+    padding: 12px;
+    border-radius: 6px;
+    outline: none;
+    font-family: inherit;            /* Fixes default font issue */
+    width: 100%;
+    display: block;
+}
+
+/* Specific Fixes for Text Area */
+.modal .center textarea {
+    min-height: 100px;  /* Good starting height */
+    resize: vertical;   /* Allows dragging DOWN only, not sideways */
+}
+
+.modal .center input:focus, 
+.modal .center select:focus,
+.modal .center textarea:focus {
+    border-color: var(--primary-accent);
+}
+
+.modal .center button {
+    background-color: var(--primary-accent);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 5px;
+}
+
+.modal .center button:hover {
+    background-color: var(--primary-hover);
+}
