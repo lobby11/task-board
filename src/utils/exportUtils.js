@@ -42,20 +42,20 @@ export function exportToPDF(tasksData) {
     <html>
     <head>
       <meta charset="UTF-8">
-      <title>Kanban Board</title>
+      <title>Task Board</title>
       <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
+        body { font-family:  Segoe UI, sans-serif; padding: 20px; }
         h1 { text-align: center; color: #333; }
-        .column { margin-bottom: 30px; }
-        .column-title { background: #4f46e5; color: white; padding: 10px; font-weight: bold; }
-        .task { border: 1px solid #ddd; padding: 15px; margin: 10px 0; background: #f9f9f9; }
-        .task-title { font-weight: bold; margin-bottom: 5px; }
-        .task-label { display: inline-block; padding: 3px 8px; border-radius: 3px; font-size: 12px; margin-bottom: 5px; }
-        .subtask { margin-left: 20px; font-size: 14px; }
+        .column { margin-bottom: 30px; font-weight: bold; }
+        .column-title { background: #01001bff; color: white; padding: 10px; font-weight: bold; }
+        .task { border: 1px solid #f0eeeeff; padding: 15px; margin: 5px 0; background: #f9f9f9; font-size: 20px; font-weight: bold;  }
+        .task-title { font-weight: bold; margin-bottom: 5px; letter-spacing: 1.2px; }
+        .task-label { display: inline-block; padding: 3px 8px; border-radius: 3px; font-size: 14px; margin-bottom: 5px; }
+        .subtask { font-size: 12x; }
       </style>
     </head>
     <body>
-      <h1>Kanban Board Export</h1>
+      <h1>Task Board Export</h1>
       <p>Generated on: ${new Date().toLocaleString()}</p>
   `;
 
@@ -67,7 +67,7 @@ export function exportToPDF(tasksData) {
     tasksData[key].forEach(task => {
       html += `
         <div class="task">
-          ${task.label ? `<span class="task-label" style="background: #ddd;">${task.label}</span>` : ''}
+          ${task.label ? `<span class="task-label" style="background: #ddd; ">${task.label}</span>` : ''}
           <div class="task-title">${task.title}</div>
           ${task.desc ? `<p>${task.desc}</p>` : ''}
           ${task.dueDate ? `<p><strong>Due:</strong> ${task.dueDate}</p>` : ''}
